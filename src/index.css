@@ -429,15 +429,27 @@ tr:hover {
 }
 
 .level-badge.declarer {
-  background-color: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.4);
+  /* Declarer: dark/rich yellow */
+  background-color: rgba(180, 130, 0, 0.45);
+  border-color: rgba(180, 130, 0, 0.7);
+  color: #fbbf24;
 }
 
 .level-badge.teammate {
-  background-color: rgba(252, 165, 165, 0.2);
-  color: #fca5a5;
-  border-color: rgba(252, 165, 165, 0.4);
+  /* Teammate: soft/light yellow */
+  background-color: rgba(234, 179, 8, 0.15);
+  border-color: rgba(234, 179, 8, 0.35);
+  color: #fde68a;
+}
+
+/* Score went up: red text (overrides role color) */
+.level-badge.winner {
+  color: #ef4444;
+}
+
+/* Score went down: dim/dark text (overrides role color) */
+.level-badge.decreased {
+  color: #6b7280;
 }
 
 /* Round Settings */

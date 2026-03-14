@@ -70,21 +70,26 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers }) => 
         setPlayers(prev => prev.map(p => {
             const lastScore = p.levelHistory[p.levelHistory.length - 1] ?? 0;
 
+            // Determine this player's role for the round being recorded
+            const role: 'declarer' | 'teammate' | 'none' =
+                p.id === declarerId ? 'declarer' :
+                    teamIds.includes(p.id) ? 'teammate' : 'none';
+
             if (winner === 'surrender') {
                 if (p.id === declarerId) {
-                    return { ...p, levelHistory: [...p.levelHistory, Math.max(0, lastScore - 1)] };
+                    return { ...p, levelHistory: [...p.levelHistory, Math.max(0, lastScore - 1)], roundRoles: [...(p.roundRoles ?? []), role] };
                 } else {
-                    return { ...p, levelHistory: [...p.levelHistory, lastScore + 1] };
+                    return { ...p, levelHistory: [...p.levelHistory, lastScore + 1], roundRoles: [...(p.roundRoles ?? []), role] };
                 }
             } else if (winner === 'declarer') {
                 if (declarerTeam.includes(p.id)) {
-                    return { ...p, levelHistory: [...p.levelHistory, lastScore + wonCount] };
+                    return { ...p, levelHistory: [...p.levelHistory, lastScore + wonCount], roundRoles: [...(p.roundRoles ?? []), role] };
                 }
-                return { ...p, levelHistory: [...p.levelHistory, lastScore] };
+                return { ...p, levelHistory: [...p.levelHistory, lastScore], roundRoles: [...(p.roundRoles ?? []), role] };
             } else {
                 // Offense won
                 if (!declarerTeam.includes(p.id)) {
-                    return { ...p, levelHistory: [...p.levelHistory, lastScore + wonCount] };
+                    return { ...p, levelHistory: [...p.levelHistory, lastScore + wonCount], roundRoles: [...(p.roundRoles ?? []), role] };
                 } else {
                     let newScore = lastScore;
                     if (isDeclarerJA) {
@@ -96,7 +101,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers }) => 
                             newScore = Math.max(0, lastScore - 4);
                         }
                     }
-                    return { ...p, levelHistory: [...p.levelHistory, newScore] };
+                    return { ...p, levelHistory: [...p.levelHistory, newScore], roundRoles: [...(p.roundRoles ?? []), role] };
                 }
             }
         }));
@@ -178,17 +183,48 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers }) => 
                                         <tr key={gIndex}>
                                             <td><strong>{gIndex === 0 ? "Start" : gIndex}</strong></td>
                                             {players.map(p => {
+                                                // Role stored at roundRoles[gIndex] = role the player had
+                                                // when starting from levelHistory[gIndex] (this row).
+                                                const storedRole = (p.roundRoles ?? [])[gIndex];
+
+                                                // Winner = score went up from the previous row
+                                                const isWinner = gIndex > 0 &&
+                                                    p.levelHistory[gIndex] !== undefined &&
+                                                    p.levelHistory[gIndex - 1] !== undefined &&
+                                                    p.levelHistory[gIndex] > p.levelHistory[gIndex - 1];
+
+                                                // Decreased = score went down (penalty/surrender)
+                                                const isDecreased = gIndex > 0 &&
+                                                    p.levelHistory[gIndex] !== undefined &&
+                                                    p.levelHistory[gIndex - 1] !== undefined &&
+                                                    p.levelHistory[gIndex] < p.levelHistory[gIndex - 1];
+
+                                                // Live selection (only used on last row)
                                                 const isDeclarer = p.id === declarerId;
                                                 const isTeammate = teamIds.includes(p.id);
+
                                                 let badgeClass = "level-badge";
-                                                if (isLastRow) badgeClass += " clickable";
-                                                if (isLastRow && isDeclarer) badgeClass += " declarer";
-                                                if (isLastRow && isTeammate) badgeClass += " teammate";
+                                                if (isLastRow) {
+                                                    // Live clickable row: show current selection state
+                                                    badgeClass += " clickable";
+                                                    if (isDeclarer) badgeClass += " declarer";
+                                                    else if (isTeammate) badgeClass += " teammate";
+                                                    // Score change text color always applies
+                                                    if (isWinner) badgeClass += " winner";
+                                                    else if (isDecreased) badgeClass += " decreased";
+                                                } else {
+                                                    // Historical row: role background from stored data
+                                                    if (storedRole === 'declarer') badgeClass += " declarer";
+                                                    else if (storedRole === 'teammate') badgeClass += " teammate";
+                                                    // Score change text color stacks on top of role background
+                                                    if (isWinner) badgeClass += " winner";
+                                                    else if (isDecreased) badgeClass += " decreased";
+                                                }
 
                                                 return (
                                                     <td key={`${p.id}-${gIndex}`}>
                                                         <span className="score-cell">
-                                                            <span 
+                                                            <span
                                                                 className={badgeClass}
                                                                 onClick={() => isLastRow ? handlePlayerClick(p.id) : undefined}
                                                                 title={isLastRow ? "Click to set Declarer/Teammate" : ""}
@@ -243,7 +279,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers }) => 
                                     <span style={{ color: 'var(--text-muted)' }}>None selected</span>
                                 )}
                             </p>
-                            <small className="help-text" style={{ display: 'block', marginTop: '0.75rem' }}>Click the latest scores in Game Standings to select. Red = Declarer, Light Red = Team.</small>
+                            <small className="help-text" style={{ display: 'block', marginTop: '0.75rem' }}>Click the latest scores in Game Standings to select. Yellow = Declarer, Light Yellow = Team.</small>
                         </div>
 
                         <div className="form-group">

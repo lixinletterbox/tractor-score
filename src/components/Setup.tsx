@@ -25,7 +25,8 @@ export const Setup: React.FC<SetupProps> = ({ onStartGame }) => {
         setPlayers([...players, {
             id: Date.now().toString() + Math.random().toString(),
             name,
-            levelHistory: [0] // Starts at '2'
+            levelHistory: [0], // Starts at '2'
+            roundRoles: [],
         }]);
         setInputValue('');
     };

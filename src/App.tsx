@@ -17,7 +17,14 @@ function App() {
       {!isSetupComplete ? (
         <Setup onStartGame={handleStartGame} />
       ) : (
-        <Dashboard players={players} setPlayers={setPlayers} />
+        <Dashboard 
+          players={players} 
+          setPlayers={setPlayers} 
+          onEndGame={() => {
+            setPlayers([]);
+            setIsSetupComplete(false);
+          }} 
+        />
       )}
     </div>
   );

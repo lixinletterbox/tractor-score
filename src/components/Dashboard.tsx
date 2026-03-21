@@ -198,7 +198,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers, onEnd
                 id: Date.now().toString() + Math.random().toString(),
                 name,
                 levelHistory: history,
-                roundRoles: Array(lastRoundIndex + 1).fill('none' as any),
+                roundRoles: Array(lastRoundIndex).fill('none' as any),
                 status: 'active'
             }
         ]);

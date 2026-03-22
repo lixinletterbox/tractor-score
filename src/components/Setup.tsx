@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import type { Player } from '../types';
+import { useTranslation } from '../i18n/LanguageContext';
 
 interface SetupProps {
     onStartGame: (players: Player[]) => void;
 }
 
 export const Setup: React.FC<SetupProps> = ({ onStartGame }) => {
+    const { language, setLanguage, t } = useTranslation();
     const [players, setPlayers] = useState<Player[]>([]);
     const [inputValue, setInputValue] = useState('');
 
@@ -14,11 +16,11 @@ export const Setup: React.FC<SetupProps> = ({ onStartGame }) => {
         const name = inputValue.trim();
         if (!name) return;
         if (players.length >= 10) {
-            alert("Maximum 10 players allowed!");
+            alert(t('setup.maxPlayers'));
             return;
         }
         if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-            alert("Player already exists!");
+            alert(t('setup.playerExists'));
             return;
         }
 
@@ -41,24 +43,40 @@ export const Setup: React.FC<SetupProps> = ({ onStartGame }) => {
         <div className="animate-fade-in">
             <div className="glass-card setup-card">
                 <header className="app-header">
+                    <div className="language-switcher">
+                        <button
+                            className={`lang-btn ${language === 'en' ? 'active' : ''}`}
+                            onClick={() => setLanguage('en')}
+                            type="button"
+                        >
+                            English
+                        </button>
+                        <button
+                            className={`lang-btn ${language === 'zh' ? 'active' : ''}`}
+                            onClick={() => setLanguage('zh')}
+                            type="button"
+                        >
+                            中文
+                        </button>
+                    </div>
                     <div className="logo-icon" role="img" aria-label="Tractor">🚜</div>
-                    <h1>Tractor Score</h1>
-                    <p>Start a new game for 4 to 10 players.</p>
+                    <h1>{t('setup.title')}</h1>
+                    <p>{t('setup.subtitle')}</p>
                 </header>
 
                 <form className="form-group" onSubmit={handleAddPlayer}>
-                    <label htmlFor="player-input">Add Player Name</label>
+                    <label htmlFor="player-input">{t('setup.addPlayerLabel')}</label>
                     <div className="input-row">
                         <input
                             type="text"
                             id="player-input"
-                            placeholder="Enter name (e.g. Alice)"
+                            placeholder={t('setup.placeholder')}
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             autoComplete="off"
                         />
                         <button type="submit" className="btn btn-primary">
-                            Add <span style={{ fontSize: '1.2em', lineHeight: 1 }}>+</span>
+                            {t('setup.addBtn')} <span style={{ fontSize: '1.2em', lineHeight: 1 }}>+</span>
                         </button>
                     </div>
                 </form>
@@ -80,7 +98,7 @@ export const Setup: React.FC<SetupProps> = ({ onStartGame }) => {
                     ))}
                     {players.length === 0 && (
                         <div style={{ color: 'var(--text-muted)', fontStyle: 'italic', margin: '1rem 0', gridColumn: '1 / -1' }}>
-                            No players added yet. Add at least 4 to begin.
+                            {t('setup.noPlayers')}
                         </div>
                     )}
                 </div>
@@ -89,10 +107,10 @@ export const Setup: React.FC<SetupProps> = ({ onStartGame }) => {
                     <p className="status-msg" style={{ color: isValid ? 'var(--accent)' : 'var(--text-muted)' }}>
                         {isValid ? (
                             <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <span style={{ color: 'var(--accent)', fontSize: '1.2rem' }}>✓</span> {players.length} players ready
+                                <span style={{ color: 'var(--accent)', fontSize: '1.2rem' }}>✓</span> {t('setup.playersReady', { count: players.length })}
                             </span>
                         ) : (
-                            `${players.length}/10 players added. Need at least 4.`
+                            t('setup.playersCount', { count: players.length })
                         )}
                     </p>
                     <button
@@ -100,7 +118,7 @@ export const Setup: React.FC<SetupProps> = ({ onStartGame }) => {
                         disabled={!isValid}
                         onClick={() => onStartGame(players)}
                     >
-                        Start Game <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>→</span>
+                        {t('setup.startGame')} <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>→</span>
                     </button>
                 </div>
             </div>

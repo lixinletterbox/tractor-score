@@ -3,22 +3,22 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { indexToScore } from '../logic/scoring';
 
-export function exportStandingsToPDF(players: Player[]) {
+export function exportStandingsToPDF(players: Player[], t: (key: string) => string) {
     const doc = new jsPDF();
 
     doc.setFontSize(20);
-    doc.text("Tractor Card Game Tracker - Results", 14, 22);
+    doc.text(t('pdf.title'), 14, 22);
 
     doc.setFontSize(11);
-    doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+    doc.text(`${t('pdf.generated')} ${new Date().toLocaleString()}`, 14, 30);
 
     const numGames = Math.max(0, ...players.map(p => p.levelHistory.length));
     
-    const headers = ['Game', ...players.map(p => p.name)];
+    const headers = [t('pdf.game'), ...players.map(p => p.name)];
     
     const tableData = Array.from({ length: numGames }).map((_, gIndex) => {
         return [
-            gIndex === 0 ? 'Start' : gIndex.toString(),
+            gIndex === 0 ? t('pdf.start') : gIndex.toString(),
             ...players.map(p => p.levelHistory[gIndex] !== undefined ? indexToScore(p.levelHistory[gIndex]) : '-')
         ];
     });

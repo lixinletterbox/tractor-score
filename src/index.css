@@ -779,3 +779,43 @@ tbody tr:nth-last-child(2) td:first-child {
 .dropdown-menu button.danger:hover {
   background: rgba(239, 68, 68, 0.15);
 }
+
+/* Language Switcher */
+.language-switcher {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 999px;
+  padding: 4px;
+  border: 1px solid var(--border-color);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.lang-btn {
+  padding: 0.4rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+  color: var(--text-muted);
+  background: transparent;
+  user-select: none;
+}
+
+.lang-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.lang-btn.active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  color: white;
+  box-shadow: 0 0 12px -2px var(--primary-glow);
+}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Setup } from './components/Setup';
 import { Dashboard } from './components/Dashboard';
+import { LanguageProvider } from './i18n/LanguageContext';
 import type { Player } from './types';
 
 function App() {
@@ -13,20 +14,22 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      {!isSetupComplete ? (
-        <Setup onStartGame={handleStartGame} />
-      ) : (
-        <Dashboard 
-          players={players} 
-          setPlayers={setPlayers} 
-          onEndGame={() => {
-            setPlayers([]);
-            setIsSetupComplete(false);
-          }} 
-        />
-      )}
-    </div>
+    <LanguageProvider>
+      <div className="app-container">
+        {!isSetupComplete ? (
+          <Setup onStartGame={handleStartGame} />
+        ) : (
+          <Dashboard 
+            players={players} 
+            setPlayers={setPlayers} 
+            onEndGame={() => {
+              setPlayers([]);
+              setIsSetupComplete(false);
+            }} 
+          />
+        )}
+      </div>
+    </LanguageProvider>
   );
 }
 

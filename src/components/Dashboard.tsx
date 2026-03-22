@@ -312,6 +312,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers, onEnd
                                                 }}>
                                                     {p.name} {p.status === 'suspended' ? '⏸' : ''}
                                                 </span>
+                                                <span className="kebab-icon">⋮</span>
                                             </div>
                                         </th>
                                     ))}
@@ -420,6 +421,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers, onEnd
                                                 }}>
                                                     {p.name} {p.status === 'suspended' ? '⏸' : ''}
                                                 </span>
+                                                <span className="kebab-icon">⋮</span>
                                             </div>
                                         </th>
                                     ))}
@@ -516,108 +518,116 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers, onEnd
                         </button>
                     </form>
                 </div>
-            </main>
+            </main >
 
             {/* Edit Modal */}
-            {editingPlayer && (
-                <div className="modal-overlay" onClick={() => setEditingPlayer(null)}>
-                    <div className="glass-card modal-content" onClick={e => e.stopPropagation()}>
-                        <h3>{t('edit.title')} <span>{editingPlayer.name}</span></h3>
-                        <div className="form-group">
-                            <label>{t('edit.label')}</label>
-                            <input
-                                type="text"
-                                value={editLevelInput}
-                                onChange={(e) => setEditLevelInput(e.target.value)}
-                                autoFocus
-                            />
-                        </div>
-                        <div className="modal-actions">
-                            <button type="button" onClick={() => setEditingPlayer(null)} className="btn btn-outline">{t('edit.cancel')}</button>
-                            <button type="button" onClick={handleSaveEdit} className="btn btn-primary">{t('edit.save')} <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>✓</span></button>
+            {
+                editingPlayer && (
+                    <div className="modal-overlay" onClick={() => setEditingPlayer(null)}>
+                        <div className="glass-card modal-content" onClick={e => e.stopPropagation()}>
+                            <h3>{t('edit.title')} <span>{editingPlayer.name}</span></h3>
+                            <div className="form-group">
+                                <label>{t('edit.label')}</label>
+                                <input
+                                    type="text"
+                                    value={editLevelInput}
+                                    onChange={(e) => setEditLevelInput(e.target.value)}
+                                    autoFocus
+                                />
+                            </div>
+                            <div className="modal-actions">
+                                <button type="button" onClick={() => setEditingPlayer(null)} className="btn btn-outline">{t('edit.cancel')}</button>
+                                <button type="button" onClick={handleSaveEdit} className="btn btn-primary">{t('edit.save')} <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>✓</span></button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Add Player Modal */}
-            {isAddPlayerOpen && (
-                <div className="modal-overlay" onClick={() => setIsAddPlayerOpen(false)}>
-                    <div className="glass-card modal-content" onClick={e => e.stopPropagation()}>
-                        <h3>{t('addPlayer.title')}</h3>
-                        <form onSubmit={handleAddPlayer} className="form-group" style={{ marginBottom: 0 }}>
-                            <label>{t('addPlayer.label')}</label>
-                            <input
-                                type="text"
-                                value={newPlayerName}
-                                onChange={(e) => setNewPlayerName(e.target.value)}
-                                placeholder={t('addPlayer.placeholder')}
-                                autoFocus
-                            />
-                            <div className="modal-actions" style={{ marginTop: '1.5rem' }}>
-                                <button type="button" onClick={() => setIsAddPlayerOpen(false)} className="btn btn-outline">{t('addPlayer.cancel')}</button>
-                                <button type="submit" className="btn btn-primary">{t('addPlayer.add')} <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>+</span></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-
-            {/* Fixed Dropdown Menu Overlay */}
-            {openDropdownId && actionMenuPlayer && dropdownRect && (
-                <div
-                    className="dropdown-menu animate-fade-in"
-                    style={{
-                        position: 'fixed',
-                        top: dropdownRect.top,
-                        bottom: dropdownRect.bottom,
-                        left: dropdownRect.left + (dropdownRect.width / 2),
-                        transform: 'translateX(-50%)',
-                        zIndex: 1000,
-                        fontWeight: 'normal',
-                        textTransform: 'none',
-                        letterSpacing: 'normal'
-                    }}
-                    onClick={e => e.stopPropagation()}
-                >
-                    <div style={{ display: 'flex', gap: '0.2rem', paddingBottom: '0.3rem', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '0.2rem' }}>
-                        <button style={{ flex: 1, textAlign: 'center', padding: '0.3rem' }} onClick={(e) => { e.stopPropagation(); movePlayer(actionMenuPlayer.id, -1); }} title={t('menu.moveLeft')}>◀</button>
-                        <button style={{ flex: 1, textAlign: 'center', padding: '0.3rem' }} onClick={(e) => { e.stopPropagation(); movePlayer(actionMenuPlayer.id, 1); }} title={t('menu.moveRight')}>▶</button>
-                    </div>
-
-                    <button onClick={(e) => { e.stopPropagation(); openEditModal(actionMenuPlayer); }}>
-                        {t('menu.editScore')}
-                    </button>
-
-                    {actionMenuPlayer.status !== 'quit' && (
-                        <button onClick={(e) => { e.stopPropagation(); togglePlayerSuspend(actionMenuPlayer.id); }}>
-                            {actionMenuPlayer.status === 'suspended' ? t('menu.resume') : t('menu.suspend')}
-                        </button>
-                    )}
-
-                    {actionMenuPlayer.status !== 'quit' && (
-                        <button className="danger" onClick={(e) => { e.stopPropagation(); handleQuitPlayer(actionMenuPlayer.id); }}>
-                            {t('menu.quit')}
-                        </button>
-                    )}
-                </div>
-            )}
-
-            {/* End Game Confirm Modal */}
-            {isEndGameModalOpen && (
-                <div className="modal-overlay" onClick={() => setIsEndGameModalOpen(false)}>
-                    <div className="glass-card modal-content" onClick={e => e.stopPropagation()}>
-                        <h3>{t('endGame.title')}</h3>
-                        <p style={{ margin: '1rem 0', color: 'var(--text-main)' }}>
-                            {t('endGame.confirm')}
-                        </p>
-                        <div className="modal-actions">
-                            <button className="btn btn-outline" onClick={() => setIsEndGameModalOpen(false)}>{t('endGame.cancel')}</button>
-                            <button className="btn btn-danger" onClick={() => { setIsGameEnded(true); setIsEndGameModalOpen(false); }}>{t('endGame.confirmBtn')}</button>
+            {
+                isAddPlayerOpen && (
+                    <div className="modal-overlay" onClick={() => setIsAddPlayerOpen(false)}>
+                        <div className="glass-card modal-content" onClick={e => e.stopPropagation()}>
+                            <h3>{t('addPlayer.title')}</h3>
+                            <form onSubmit={handleAddPlayer} className="form-group" style={{ marginBottom: 0 }}>
+                                <label>{t('addPlayer.label')}</label>
+                                <input
+                                    type="text"
+                                    value={newPlayerName}
+                                    onChange={(e) => setNewPlayerName(e.target.value)}
+                                    placeholder={t('addPlayer.placeholder')}
+                                    autoFocus
+                                />
+                                <div className="modal-actions" style={{ marginTop: '1.5rem' }}>
+                                    <button type="button" onClick={() => setIsAddPlayerOpen(false)} className="btn btn-outline">{t('addPlayer.cancel')}</button>
+                                    <button type="submit" className="btn btn-primary">{t('addPlayer.add')} <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>+</span></button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+
+            {/* Fixed Dropdown Menu Overlay */}
+            {
+                openDropdownId && actionMenuPlayer && dropdownRect && (
+                    <div
+                        className="dropdown-menu animate-fade-in"
+                        style={{
+                            position: 'fixed',
+                            top: dropdownRect.top,
+                            bottom: dropdownRect.bottom,
+                            left: dropdownRect.left + (dropdownRect.width / 2),
+                            transform: 'translateX(-50%)',
+                            zIndex: 1000,
+                            fontWeight: 'normal',
+                            textTransform: 'none',
+                            letterSpacing: 'normal'
+                        }}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div style={{ display: 'flex', gap: '0.2rem', paddingBottom: '0.3rem', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '0.2rem' }}>
+                            <button style={{ flex: 1, textAlign: 'center', padding: '0.3rem' }} onClick={(e) => { e.stopPropagation(); movePlayer(actionMenuPlayer.id, -1); }} title={t('menu.moveLeft')}>◀</button>
+                            <button style={{ flex: 1, textAlign: 'center', padding: '0.3rem' }} onClick={(e) => { e.stopPropagation(); movePlayer(actionMenuPlayer.id, 1); }} title={t('menu.moveRight')}>▶</button>
+                        </div>
+
+                        <button onClick={(e) => { e.stopPropagation(); openEditModal(actionMenuPlayer); }}>
+                            {t('menu.editScore')}
+                        </button>
+
+                        {actionMenuPlayer.status !== 'quit' && (
+                            <button onClick={(e) => { e.stopPropagation(); togglePlayerSuspend(actionMenuPlayer.id); }}>
+                                {actionMenuPlayer.status === 'suspended' ? t('menu.resume') : t('menu.suspend')}
+                            </button>
+                        )}
+
+                        {actionMenuPlayer.status !== 'quit' && (
+                            <button className="danger" onClick={(e) => { e.stopPropagation(); handleQuitPlayer(actionMenuPlayer.id); }}>
+                                {t('menu.quit')}
+                            </button>
+                        )}
+                    </div>
+                )
+            }
+
+            {/* End Game Confirm Modal */}
+            {
+                isEndGameModalOpen && (
+                    <div className="modal-overlay" onClick={() => setIsEndGameModalOpen(false)}>
+                        <div className="glass-card modal-content" onClick={e => e.stopPropagation()}>
+                            <h3>{t('endGame.title')}</h3>
+                            <p style={{ margin: '1rem 0', color: 'var(--text-main)' }}>
+                                {t('endGame.confirm')}
+                            </p>
+                            <div className="modal-actions">
+                                <button className="btn btn-outline" onClick={() => setIsEndGameModalOpen(false)}>{t('endGame.cancel')}</button>
+                                <button className="btn btn-danger" onClick={() => { setIsGameEnded(true); setIsEndGameModalOpen(false); }}>{t('endGame.confirmBtn')}</button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+        </div >
     );
 };

@@ -29,52 +29,67 @@ export async function exportStandingsToPDF(t: (key: string) => string) {
     // Add Title
     const title = document.createElement('h1');
     title.innerText = t('pdf.title');
-    title.style.fontSize = '24px';
+    title.style.fontSize = '26px';
     title.style.marginBottom = '10px';
+    title.style.color = '#4b5563'; // Lighter color as requested (gray-600)
     printContainer.appendChild(title);
 
     // Add Generated Time
     const meta = document.createElement('p');
     meta.innerText = `${t('pdf.generated')} ${new Date().toLocaleString()}`;
     meta.style.fontSize = '12px';
-    meta.style.marginBottom = '20px';
-    meta.style.color = '#666666';
+    meta.style.marginBottom = '25px';
+    meta.style.color = '#9ca3af'; // Even lighter for meta
     printContainer.appendChild(meta);
 
     // Clone the table to avoid affecting the UI
     const tableClone = element.cloneNode(true) as HTMLElement;
+    tableClone.removeAttribute('id'); // Remove ID from clone
     tableClone.style.width = '100%';
     tableClone.style.borderCollapse = 'collapse';
     tableClone.style.color = '#000000';
     tableClone.style.backgroundColor = '#ffffff';
+    tableClone.style.tableLayout = 'fixed'; // Ensure consistent column widths
     
-    // Clean up clone (remove interactive elements like kebab icons)
+    // 1. Remove the footer (the redundant player names at the bottom)
+    const tfoot = tableClone.querySelector('tfoot');
+    if (tfoot) tfoot.remove();
+    
+    // 2. Clean up clone (remove interactive elements like kebab icons)
     const kebabIcons = tableClone.querySelectorAll('.kebab-icon');
     kebabIcons.forEach(icon => icon.remove());
     
-    // Reset any glassmorphism or dark modes styles for the PDF
+    // 3. Reset any glassmorphism, dark modes, or sticky styles for the PDF
+    const allElements = tableClone.querySelectorAll('*');
+    allElements.forEach(el => {
+        const e = el as HTMLElement;
+        e.style.position = 'static'; // Remove sticky/absolute positioning
+        e.style.backdropFilter = 'none';
+        e.style.boxShadow = 'none';
+        e.style.textShadow = 'none'; // Explicitly remove shadows for readability
+        e.style.transition = 'none';
+        e.style.transform = 'none';
+    });
+
     const cells = tableClone.querySelectorAll('th, td');
     cells.forEach(cell => {
         const c = cell as HTMLElement;
-        c.style.border = '1px solid #dddddd';
-        c.style.padding = '8px';
+        c.style.border = '1px solid #333333'; // Darker border for clarity
+        c.style.padding = '10px 5px';
         c.style.backgroundColor = '#ffffff';
         c.style.color = '#000000';
+        c.style.textAlign = 'center';
+        c.style.fontSize = '13px'; // Slightly larger base font
     });
 
-    // Special styling for headers
+    // Special styling for headers (Player names)
     const headers = tableClone.querySelectorAll('thead th');
     headers.forEach(header => {
         const h = header as HTMLElement;
-        h.style.backgroundColor = '#f3f4f6';
+        h.style.backgroundColor = '#f9fafb';
         h.style.fontWeight = 'bold';
-    });
-
-    const footers = tableClone.querySelectorAll('tfoot th');
-    footers.forEach(footer => {
-        const f = footer as HTMLElement;
-        f.style.backgroundColor = '#f3f4f6';
-        f.style.fontWeight = 'bold';
+        h.style.fontSize = '16px'; // Larger font for players
+        h.style.borderBottom = '2px solid #000000'; // Thicker bottom border for header
     });
 
     printContainer.appendChild(tableClone);

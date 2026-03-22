@@ -262,7 +262,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers, onEnd
                     )}
                 </div>
                 <div className="header-right">
-                    <button onClick={() => exportStandingsToPDF(players, t)} className="btn btn-outline">
+                    <button onClick={() => exportStandingsToPDF(t)} className="btn btn-outline">
                         {t('dashboard.exportPdf')}
                     </button>
                 </div>
@@ -274,7 +274,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers, onEnd
                         <h3>{t('standings.title')}</h3>
                     </div>
                     <div className="table-responsive">
-                        <table>
+                        <table id="standings-table">
                             <thead>
                                 <tr>
                                     <th style={{ width: '40px', minWidth: '40px' }}></th>

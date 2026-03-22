@@ -1,35 +1,106 @@
-import type { Player } from '../types';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import { indexToScore } from '../logic/scoring';
+import html2canvas from 'html2canvas';
 
-export function exportStandingsToPDF(players: Player[], t: (key: string) => string) {
-    const doc = new jsPDF();
+/**
+ * Exports the standings table to PDF.
+ * Uses html2canvas to render Chinese characters as images since jsPDF 
+ * standard fonts do not support them.
+ */
+export async function exportStandingsToPDF(t: (key: string) => string) {
+    const tableIdentifier = 'standings-table';
+    const element = document.getElementById(tableIdentifier);
 
-    doc.setFontSize(20);
-    doc.text(t('pdf.title'), 14, 22);
+    if (!element) {
+        alert('Table element not found');
+        return;
+    }
 
-    doc.setFontSize(11);
-    doc.text(`${t('pdf.generated')} ${new Date().toLocaleString()}`, 14, 30);
+    // Create a temporary container for the PDF content to ensure proper styling
+    const printContainer = document.createElement('div');
+    printContainer.style.position = 'absolute';
+    printContainer.style.left = '-9999px';
+    printContainer.style.top = '0';
+    printContainer.style.width = '800px';
+    printContainer.style.backgroundColor = '#ffffff';
+    printContainer.style.color = '#000000';
+    printContainer.style.padding = '20px';
+    printContainer.style.fontFamily = 'sans-serif';
 
-    const numGames = Math.max(0, ...players.map(p => p.levelHistory.length));
+    // Add Title
+    const title = document.createElement('h1');
+    title.innerText = t('pdf.title');
+    title.style.fontSize = '24px';
+    title.style.marginBottom = '10px';
+    printContainer.appendChild(title);
+
+    // Add Generated Time
+    const meta = document.createElement('p');
+    meta.innerText = `${t('pdf.generated')} ${new Date().toLocaleString()}`;
+    meta.style.fontSize = '12px';
+    meta.style.marginBottom = '20px';
+    meta.style.color = '#666666';
+    printContainer.appendChild(meta);
+
+    // Clone the table to avoid affecting the UI
+    const tableClone = element.cloneNode(true) as HTMLElement;
+    tableClone.style.width = '100%';
+    tableClone.style.borderCollapse = 'collapse';
+    tableClone.style.color = '#000000';
+    tableClone.style.backgroundColor = '#ffffff';
     
-    const headers = [t('pdf.game'), ...players.map(p => p.name)];
+    // Clean up clone (remove interactive elements like kebab icons)
+    const kebabIcons = tableClone.querySelectorAll('.kebab-icon');
+    kebabIcons.forEach(icon => icon.remove());
     
-    const tableData = Array.from({ length: numGames }).map((_, gIndex) => {
-        return [
-            gIndex === 0 ? t('pdf.start') : gIndex.toString(),
-            ...players.map(p => p.levelHistory[gIndex] !== undefined ? indexToScore(p.levelHistory[gIndex]) : '-')
-        ];
+    // Reset any glassmorphism or dark modes styles for the PDF
+    const cells = tableClone.querySelectorAll('th, td');
+    cells.forEach(cell => {
+        const c = cell as HTMLElement;
+        c.style.border = '1px solid #dddddd';
+        c.style.padding = '8px';
+        c.style.backgroundColor = '#ffffff';
+        c.style.color = '#000000';
     });
 
-    autoTable(doc, {
-        startY: 40,
-        head: [headers],
-        body: tableData,
-        theme: 'grid',
-        headStyles: { fillColor: [59, 130, 246] }
+    // Special styling for headers
+    const headers = tableClone.querySelectorAll('thead th');
+    headers.forEach(header => {
+        const h = header as HTMLElement;
+        h.style.backgroundColor = '#f3f4f6';
+        h.style.fontWeight = 'bold';
     });
 
-    doc.save('tractor-scores.pdf');
+    const footers = tableClone.querySelectorAll('tfoot th');
+    footers.forEach(footer => {
+        const f = footer as HTMLElement;
+        f.style.backgroundColor = '#f3f4f6';
+        f.style.fontWeight = 'bold';
+    });
+
+    printContainer.appendChild(tableClone);
+    document.body.appendChild(printContainer);
+
+    try {
+        const canvas = await html2canvas(printContainer, {
+            scale: 2, // Higher resolution
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth() - 28; // Padding
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, 'PNG', 14, 14, pdfWidth, pdfHeight);
+        pdf.save('tractor-scores.pdf');
+    } catch (error) {
+        console.error('PDF generation failed:', error);
+        alert('Failed to generate PDF');
+    } finally {
+        document.body.removeChild(printContainer);
+    }
 }

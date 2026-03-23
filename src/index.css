@@ -300,8 +300,8 @@ input::placeholder {
 }
 
 .logo-icon {
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
+  font-size: 6.5rem;
+  margin-bottom: 2rem;
   display: inline-block;
   filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4));
   animation: float 6s ease-in-out infinite;
@@ -414,7 +414,7 @@ input::placeholder {
 }
 
 .logo-icon.mini {
-  font-size: 2rem;
+  font-size: 3.5rem;
   animation: none;
   filter: none;
   margin: 0;
@@ -834,4 +834,50 @@ tbody tr:nth-last-child(2) td:first-child {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   color: white;
   box-shadow: 0 0 12px -2px var(--primary-glow);
+}
+
+/* SEO Footer */
+.seo-footer {
+  margin-top: 4rem;
+  padding: 2rem 1rem;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.seo-footer:hover {
+  opacity: 1;
+}
+
+.seo-content p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.seo-content span {
+  white-space: nowrap;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@media (max-width: 640px) {
+  .seo-footer {
+    margin-top: 2rem;
+    padding: 1.5rem 1rem;
+  }
 }

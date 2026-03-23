@@ -3,6 +3,7 @@ import type { Player } from '../types';
 import { indexToScore, scoreToIndex } from '../logic/scoring';
 import { exportStandingsToPDF } from '../utils/pdfExport';
 import { useTranslation } from '../i18n/LanguageContext';
+import { SEOFooter } from './SEOFooter';
 
 interface DashboardProps {
     players: Player[];
@@ -628,6 +629,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers, onEnd
                     </div>
                 )
             }
+            <SEOFooter />
         </div >
     );
 };

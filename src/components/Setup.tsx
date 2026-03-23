@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import type { Player } from '../types';
 import { useTranslation } from '../i18n/LanguageContext';
 
+import { SEOFooter } from './SEOFooter';
+
 interface SetupProps {
     onStartGame: (players: Player[]) => void;
 }
@@ -122,6 +124,7 @@ export const Setup: React.FC<SetupProps> = ({ onStartGame }) => {
                     </button>
                 </div>
             </div>
+            <SEOFooter />
         </div>
     );
 };

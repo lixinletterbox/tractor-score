@@ -2,27 +2,39 @@
 
 :root {
   /* Color Palette - Premium Modern Solid Theme */
-  --bg-base: #090e1a; /* Deep Midnight Slate */
-  --bg-surface: #161d2e; /* Solid Dark Slate */
-  --bg-surface-raised: #1f2937; /* Gray 800ish */
+  --bg-base: #090e1a;
+  /* Deep Midnight Slate */
+  --bg-surface: #161d2e;
+  /* Solid Dark Slate */
+  --bg-surface-raised: #1f2937;
+  /* Gray 800ish */
 
-  --primary: #3b82f6; /* Solid Blue 500 */
-  --primary-hover: #2563eb; /* Blue 600 */
+  --primary: #3b82f6;
+  /* Solid Blue 500 */
+  --primary-hover: #2563eb;
+  /* Blue 600 */
   --primary-glow: rgba(59, 130, 246, 0.2);
 
-  --accent: #10b981; /* Solid Emerald 500 */
-  --accent-hover: #059669; /* Emerald 600 */
+  --accent: #10b981;
+  /* Solid Emerald 500 */
+  --accent-hover: #059669;
+  /* Emerald 600 */
 
-  --warning: #f59e0b; /* Amber 500 */
-  --danger: #ef4444; /* Red 500 */
+  --warning: #f59e0b;
+  /* Amber 500 */
+  --danger: #ef4444;
+  /* Red 500 */
 
-  --text-main: #f8fafc; /* Slate 50 */
-  --text-muted: #94a3b8; /* Slate 400 */
+  --text-main: #f8fafc;
+  /* Slate 50 */
+  --text-muted: #94a3b8;
+  /* Slate 400 */
 
   --border-color: rgba(255, 255, 255, 0.1);
   --border-highlight: rgba(255, 255, 255, 0.15);
 
-  --glass-bg: #161d2e; /* Solid background for cards */
+  --glass-bg: #161d2e;
+  /* Solid background for cards */
   --glass-border-top: rgba(255, 255, 255, 0.08);
   --glass-border-bottom: rgba(255, 255, 255, 0.04);
 
@@ -642,22 +654,25 @@ tbody tr:nth-last-child(2) td:first-child {
   opacity: 0.5;
 }
 
-/* Declarer Role - Solid */
+/* Declarer Role - Bright Gray (Slate 300) */
 .level-badge.declarer {
-  background: #ef4444; /* Solid Red 500 */
-  color: white;
-  border-color: #fca5a5;
-  box-shadow: 0 4px 0 #7f1d1d;
+  background: #cbd5e1;
+  /* Slate 300 - Brighter */
+  color: #0f172a;
+  /* Dark text */
+  border-color: #f1f5f9;
+  box-shadow: 0 4px 0 #94a3b8;
   text-shadow: none;
   z-index: 2;
 }
 
-/* Teammate Role - Solid */
+/* Teammate Role - Medium Gray (Slate 500) */
 .level-badge.teammate {
-  background: #ec4899; /* Solid Pink 500 */
+  background: #64748b;
+  /* Slate 500 - Brighter */
   color: white;
-  border-color: #fbcfe8;
-  box-shadow: 0 3px 0 #831843;
+  border-color: #94a3b8;
+  box-shadow: 0 3px 0 #334155;
   text-shadow: none;
   z-index: 1;
 }
@@ -681,9 +696,9 @@ tbody tr:nth-last-child(2) td:first-child {
   transform: translateY(2px);
 }
 
-/* Winner - Thinker/Thicker border */
+/* Winner - Thicker border */
 .level-badge.winner {
-  border: 5px solid #fbbf24 !important;
+  border: 3px solid #fbbf24 !important;
 }
 
 /* Decreased (Sunk-in/Lost) */
@@ -709,15 +724,15 @@ tbody tr:nth-last-child(2) td:first-child {
 }
 
 .level-badge.decreased.declarer {
-  background: #7f1d1d;
-  color: #fca5a5;
-  border-color: #450a0a;
+  background: #64748b;
+  color: #f1f5f9;
+  border-color: #475569;
 }
 
 .level-badge.decreased.teammate {
-  background: #9d174d;
-  color: #fbcfe8;
-  border-color: #4c0519;
+  background: #475569;
+  color: #cbd5e1;
+  border-color: #334155;
 }
 
 /* Players Header Cells */
@@ -874,17 +889,17 @@ tbody tr:nth-last-child(2) td:first-child {
 }
 
 .role-chip.declarer {
-  background: #ef4444;
-  color: white;
-  border: 1px solid #fca5a5;
-  box-shadow: 0 2px 0 #7f1d1d;
+  background: #cbd5e1;
+  color: #0f172a;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 2px 0 #94a3b8;
 }
 
 .role-chip.team {
-  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  background: #64748b;
   color: white;
-  border: 1px solid #fbcfe8;
-  box-shadow: 0 2px 0 #831843, 0 3px 5px rgba(236, 72, 153, 0.3);
+  border: 1px solid #94a3b8;
+  box-shadow: 0 2px 0 #334155;
 }
 
 .help-text {

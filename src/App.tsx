@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Setup } from './components/Setup';
 import { Dashboard } from './components/Dashboard';
-import { ContactUs } from './components/ContactUs';
+import { ContactForm } from './components/ContactForm';
 import { LanguageProvider } from './i18n/LanguageContext';
 import type { Player } from './types';
 
@@ -19,23 +19,23 @@ function App() {
     <LanguageProvider>
       <div className="app-container">
         {!isSetupComplete ? (
-          <Setup 
-            onStartGame={handleStartGame} 
+          <Setup
+            onStartGame={handleStartGame}
           />
         ) : (
-          <Dashboard 
-            players={players} 
-            setPlayers={setPlayers} 
+          <Dashboard
+            players={players}
+            setPlayers={setPlayers}
             onEndGame={() => {
               setPlayers([]);
               setIsSetupComplete(false);
-            }} 
+            }}
             onOpenContact={() => setShowContact(true)}
           />
         )}
-        
+
         {showContact && (
-          <ContactUs onClose={() => setShowContact(false)} />
+          <ContactForm onClose={() => setShowContact(false)} />
         )}
       </div>
     </LanguageProvider>

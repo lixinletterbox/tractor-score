@@ -27,11 +27,13 @@ export async function exportStandingsToPDF(t: (key: string) => string) {
     printContainer.style.fontFamily = 'sans-serif';
 
     // Add Title
-    const title = document.createElement('h1');
+    const title = document.createElement('h2');
     title.innerText = t('pdf.title');
     title.style.fontSize = '26px';
     title.style.marginBottom = '10px';
-    title.style.color = '#4b5563'; // Lighter color as requested (gray-600)
+    title.style.color = '#000000'; // Pure black for better legibility
+    title.style.webkitTextFillColor = '#000000'; // Override any transparent gradients from CSS
+    title.style.background = 'none'; // Ensure no gradient background is inherited
     printContainer.appendChild(title);
 
     // Add Generated Time
@@ -39,7 +41,7 @@ export async function exportStandingsToPDF(t: (key: string) => string) {
     meta.innerText = `${t('pdf.generated')} ${new Date().toLocaleString()}`;
     meta.style.fontSize = '12px';
     meta.style.marginBottom = '25px';
-    meta.style.color = '#9ca3af'; // Even lighter for meta
+    meta.style.color = '#000000'; // Even lighter for meta
     printContainer.appendChild(meta);
 
     // Clone the table to avoid affecting the UI
@@ -50,15 +52,15 @@ export async function exportStandingsToPDF(t: (key: string) => string) {
     tableClone.style.color = '#000000';
     tableClone.style.backgroundColor = '#ffffff';
     tableClone.style.tableLayout = 'fixed'; // Ensure consistent column widths
-    
+
     // 1. Remove the footer (the redundant player names at the bottom)
     const tfoot = tableClone.querySelector('tfoot');
     if (tfoot) tfoot.remove();
-    
+
     // 2. Clean up clone (remove interactive elements like kebab icons)
     const kebabIcons = tableClone.querySelectorAll('.kebab-icon');
     kebabIcons.forEach(icon => icon.remove());
-    
+
     // 3. Reset any glassmorphism, dark modes, or sticky styles for the PDF
     const allElements = tableClone.querySelectorAll('*');
     allElements.forEach(el => {
@@ -105,7 +107,7 @@ export async function exportStandingsToPDF(t: (key: string) => string) {
 
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
-        
+
         const imgProps = pdf.getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth() - 28; // Padding
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;

@@ -89,6 +89,14 @@ const translations: Record<Language, Record<string, string>> = {
     'pdf.generated': 'Generated on:',
     'pdf.start': 'Start',
     'pdf.game': 'Game',
+
+    // Contact Us
+    'contact.title': 'Contact Us',
+    'contact.subtitle': 'Send a message, feedback, suggestions or bug reports',
+    'contact.name': 'Your Name',
+    'contact.body': 'Message',
+    'contact.send': 'Send Message',
+    'contact.close': 'Close',
   },
   zh: {
     // 设置
@@ -178,6 +186,14 @@ const translations: Record<Language, Record<string, string>> = {
     'pdf.generated': '生成时间：',
     'pdf.start': '开始',
     'pdf.game': '回合',
+
+    // Contact Us
+    'contact.title': '联系我们',
+    'contact.subtitle': '问题 反馈 建议 留言',
+    'contact.name': '您的姓名',
+    'contact.body': '留言内容',
+    'contact.send': '发送留言',
+    'contact.close': '返回',
   }
 };
 

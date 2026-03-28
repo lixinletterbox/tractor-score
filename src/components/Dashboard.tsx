@@ -9,9 +9,10 @@ interface DashboardProps {
     players: Player[];
     setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
     onEndGame: () => void;
+    onOpenContact: () => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers, onEndGame }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers, onEndGame, onOpenContact }) => {
     const { t } = useTranslation();
     const [declarerId, setDeclarerId] = useState('');
     const [teamIds, setTeamIds] = useState<string[]>([]);
@@ -262,8 +263,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ players, setPlayers, onEnd
                         </button>
                     )}
                 </div>
-                <div className="header-right">
-                    <button onClick={() => exportStandingsToPDF(t)} className="btn btn-outline">
+                <div className="header-right" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <button onClick={(e) => { e.preventDefault(); onOpenContact(); }} className="btn btn-outline" style={{ padding: '0.5rem 0.8rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }} title={t('contact.title')}>
+                        <span role="img" aria-label="contact">✉️</span> 
+                        <span className="hide-on-mobile">{t('contact.title')}</span>
+                    </button>
+                    <button onClick={() => exportStandingsToPDF(t)} className="btn btn-outline" style={{ padding: '0.5rem 0.8rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                         {t('dashboard.exportPdf')}
                     </button>
                 </div>

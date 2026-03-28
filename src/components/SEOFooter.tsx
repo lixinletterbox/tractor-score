@@ -22,6 +22,7 @@ export const SEOFooter: React.FC = () => {
                         </p>
                     </>
                 )}
+                
             </div>
         </footer>
     );

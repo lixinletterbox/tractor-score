@@ -681,9 +681,9 @@ tbody tr:nth-last-child(2) td:first-child {
   transform: translateY(2px);
 }
 
-/* Winner */
+/* Winner - Thinker/Thicker border */
 .level-badge.winner {
-  border: 2px solid #fbbf24 !important;
+  border: 5px solid #fbbf24 !important;
 }
 
 /* Decreased (Sunk-in/Lost) */

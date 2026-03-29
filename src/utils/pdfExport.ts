@@ -111,9 +111,10 @@ export async function exportStandingsToPDF(t: (key: string) => string) {
         const imgProps = pdf.getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth() - 28; // Padding
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        const fileName = 'tractor-scores-' + new Date().toISOString().slice(0, 10);
 
         pdf.addImage(imgData, 'PNG', 14, 14, pdfWidth, pdfHeight);
-        pdf.save('tractor-scores.pdf');
+        pdf.save(fileName);
     } catch (error) {
         console.error('PDF generation failed:', error);
         alert('Failed to generate PDF');
